@@ -1,0 +1,223 @@
+<title>AI &amp; Trades Federal Tracker</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column. Bills on watch up top, then a week-by-week feed.
+   Source colours follow Parliament's own: Commons green, Senate red, Gazette ink blue. */
+:root {
+  --bg: #f6f7f6; --surface: #ffffff; --fg: #18201d; --muted: #5d6763; --line: #dde2df;
+  --commons: #1d6b4f; --senate: #a3262f; --gazette: #24427a; --bill: #6b4c12;
+  --ai: #3b4fb8; --trades: #9a5a10; --chip: #eceff0; --focus: #3b4fb8;
+  --font-body: "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #111614; --surface: #182019; --fg: #e4ebe7; --muted: #98a59f; --line: #2b3530;
+  --commons: #5fbf92; --senate: #ef7d84; --gazette: #8fb0ee; --bill: #d8b06a;
+  --ai: #9eaaf5; --trades: #f0b46a; --chip: #232c27; --focus: #9eaaf5; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #111614; --surface: #182019; --fg: #e4ebe7; --muted: #98a59f; --line: #2b3530;
+  --commons: #5fbf92; --senate: #ef7d84; --gazette: #8fb0ee; --bill: #d8b06a;
+  --ai: #9eaaf5; --trades: #f0b46a; --chip: #232c27; --focus: #9eaaf5; color-scheme: dark }
+
+* { box-sizing: border-box }
+body { background: var(--bg); color: var(--fg); font: 15px/1.5 var(--font-body); }
+.wrap { max-width: 860px; margin: 0 auto; padding-block: 28px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex; flex-direction: column; gap: 28px; }
+a { color: inherit }
+a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums }
+
+header { display: flex; flex-direction: column; gap: 6px }
+h1 { font-size: 1.75rem; line-height: 1.15; margin: 0; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance }
+.sub { color: var(--muted); margin: 0; max-width: 65ch }
+.meta { color: var(--muted); font-size: 0.8rem }
+
+.controls { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center;
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg);
+  padding-block: 10px; border-bottom: 1px solid var(--line) }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg) }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--surface) }
+.seg button { font: inherit; font-size: 0.85rem; border: 0; background: transparent; color: var(--fg); padding: 6px 12px; cursor: pointer }
+.seg button + button { border-left: 1px solid var(--line) }
+.seg button[aria-pressed="true"] { background: var(--fg); color: var(--bg) }
+input[type=search] { font: inherit; font-size: 0.85rem; padding: 6px 10px; border: 1px solid var(--line); border-radius: 8px;
+  background: var(--surface); color: var(--fg); min-width: 0; flex: 1 1 160px; max-width: 260px }
+label.toggle { font-size: 0.85rem; color: var(--muted); display: inline-flex; gap: 6px; align-items: center; cursor: pointer }
+
+h2 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 0 0 10px; font-weight: 600 }
+section { display: flex; flex-direction: column }
+
+.bills { display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); overflow: hidden }
+.bill { display: grid; grid-template-columns: 70px 1fr; gap: 4px 14px; padding: 12px 14px }
+.bill + .bill { border-top: 1px solid var(--line) }
+.bill .num { font-family: var(--font-mono); font-weight: 500; color: var(--bill) }
+.bill .body { min-width: 0; display: flex; flex-direction: column; gap: 3px }
+.bill a.t { font-weight: 600; text-decoration: none }
+.bill a.t:hover { text-decoration: underline }
+.bill .status { font-size: 0.82rem; color: var(--muted) }
+.bill .note { font-size: 0.88rem }
+
+.week { display: flex; flex-direction: column; gap: 0 }
+.week h3 { font-size: 0.82rem; font-weight: 600; margin: 18px 0 6px; color: var(--muted) }
+.item { display: grid; grid-template-columns: 56px 1fr; gap: 14px; padding: 12px 0; border-top: 1px solid var(--line) }
+.item .d { font-family: var(--font-mono); font-size: 0.8rem; color: var(--muted); padding-top: 2px }
+.item .body { min-width: 0; display: flex; flex-direction: column; gap: 4px; border-left: 3px solid var(--src); padding-left: 12px }
+.item a.t { font-weight: 600; text-decoration: none; overflow-wrap: anywhere }
+.item a.t:hover { text-decoration: underline }
+.item a.t::after { content: " ↗"; color: var(--muted); font-weight: 400; font-size: 0.85em }
+.item .sum { margin: 0; max-width: 68ch }
+.item .ex { margin: 0; font-size: 0.85rem; color: var(--muted); font-style: italic }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; font-size: 0.72rem }
+.tag { padding: 1px 7px; border-radius: 4px; background: var(--chip); color: var(--muted); white-space: nowrap }
+.tag.src { color: var(--src); font-weight: 600; background: transparent; padding-left: 0 }
+.tag.ai { color: var(--ai) } .tag.trades { color: var(--trades) }
+.tag.new { background: var(--fg); color: var(--bg) }
+.item.minor .body { opacity: 0.72 }
+.item.minor a.t { font-weight: 500 }
+.s-house { --src: var(--commons) } .s-committee { --src: var(--commons) }
+.s-senate { --src: var(--senate) } .s-gazette { --src: var(--gazette) } .s-bill { --src: var(--bill) }
+.empty { color: var(--muted); padding: 20px 0 }
+ul.top { margin: 0 0 12px; padding: 12px 14px 12px 32px; background: var(--chip); border-radius: 10px;
+  display: flex; flex-direction: column; gap: 6px; font-size: 0.92rem }
+ul.top:empty { display: none }
+ul.top li { padding-left: 2px; max-width: 72ch }
+ul.top li::marker { color: var(--muted) }
+ul.top a { font-weight: 600; text-decoration: none }
+ul.top a:hover { text-decoration: underline }
+.reg-stage { font-family: var(--font-mono); font-size: 0.75rem; color: var(--gazette) }
+footer { color: var(--muted); font-size: 0.8rem; max-width: 65ch; border-top: 1px solid var(--line); padding-top: 14px }
+@media (max-width: 520px) {
+  .item { grid-template-columns: 1fr; gap: 2px } .bill { grid-template-columns: 1fr }
+  h1 { font-size: 1.45rem }
+}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>AI &amp; Skilled Trades: Federal Tracker</h1>
+    <p class="sub">Key federal developments on artificial intelligence and the skilled trades, from House and Senate debates and committees, bills and the Canada Gazette.</p>
+    <div class="meta" id="meta"></div>
+    <div class="meta">AI-generated and mostly correct with occasional mistakes. Links are included for easy verification.</div>
+  </header>
+
+  <div class="controls">
+    <div class="seg" role="group" aria-label="Topic">
+      <button id="t-all" data-topic="all" aria-pressed="true">All</button>
+      <button id="t-ai" data-topic="ai" aria-pressed="false">AI</button>
+      <button id="t-trades" data-topic="trades" aria-pressed="false">Skilled trades</button>
+    </div>
+    <input type="search" id="q" placeholder="Filter by word, bill, committee" aria-label="Filter">
+    <label class="toggle"><input type="checkbox" id="minor"> Show passing mentions</label>
+  </div>
+
+  <section>
+    <h2>Key developments</h2>
+    <ul class="top" id="feed-top"></ul>
+    <div id="feed"></div>
+  </section>
+
+  <section id="bills-sec">
+    <h2>Bills on watch</h2>
+    <ul class="top" id="bills-top"></ul>
+    <div class="bills" id="bills"></div>
+  </section>
+
+  <section id="regs-sec">
+    <h2>Regulations on watch</h2>
+    <ul class="top" id="regs-top"></ul>
+    <div class="bills" id="regs"></div>
+  </section>
+
+
+  <footer id="foot"></footer>
+</div>
+
+<script>
+const DATA = /*__DATA__*/null;
+const SRC = s => s.startsWith("House debates") ? ["house","House"] : s.startsWith("Committee") ? ["committee", s === "Committee notice" ? "Committee notice" : "House committee"]
+  : s.startsWith("Senate committee") ? ["senate", s === "Senate committee notice" ? "Senate committee notice" : "Senate committee"]
+  : s.startsWith("Senate") ? ["senate","Senate"] : s.startsWith("Canada Gazette") ? ["gazette", s.replace("Canada ", "")] : ["bill","Bill"];
+const TOPIC = {ai: "AI", trades: "Skilled trades"};
+const fmt = d => new Date(d + "T12:00:00").toLocaleDateString("en-CA", {month: "short", day: "numeric"});
+const weekOf = d => { const x = new Date(d + "T12:00:00"); x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); return x.toISOString().slice(0,10); };
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let state = {topic: "all", q: "", minor: false};
+try { const s = JSON.parse(localStorage.getItem("tracker-view") || "{}"); Object.assign(state, s); } catch (e) {}
+
+function save() { try { localStorage.setItem("tracker-view", JSON.stringify({topic: state.topic, minor: state.minor})); } catch (e) {} }
+const topicOk = t => state.topic === "all" || t.includes(state.topic);
+const qOk = (...f) => !state.q || f.join(" ").toLowerCase().includes(state.q.toLowerCase());
+
+function render() {
+  document.querySelectorAll(".seg button").forEach(b => b.setAttribute("aria-pressed", b.dataset.topic === state.topic));
+  document.getElementById("minor").checked = state.minor;
+  const material = DATA.items.filter(i => i.material);
+  document.getElementById("meta").innerHTML =
+    `Updated <span class="mono">${esc(DATA.updated)}</span> · ${material.filter(i => !i.reg).length} key developments · ${DATA.bills.length} bills · ${material.filter(i => i.reg).length} regulations on watch`;
+
+  const bills = DATA.bills.filter(b => topicOk(b.topics_tag) && qOk(b.bill, b.title, b.note, b.status));
+  document.getElementById("bills").innerHTML = bills.length ? bills.map(b => `
+    <div class="bill">
+      <div class="num">${esc(b.bill)}</div>
+      <div class="body">
+        <a class="t" href="${esc(b.url)}" target="_blank" rel="noopener">${esc(b.title.replace(/^Bill [^:]+: /, ""))}</a>
+        <div class="status">${esc(b.status)}${b.latest_event ? ` · last: ${esc(b.latest_event)}${b.latest_event_date ? ", " + fmt(b.latest_event_date) : ""}` : ""}${b.government_bill ? " · Government bill" : b.sponsor ? " · " + esc(b.sponsor) : ""}</div>
+        ${b.note ? `<div class="note">${esc(b.note)}</div>` : ""}
+        <div class="tags">${b.topics_tag.map(t => `<span class="tag ${t}">${TOPIC[t]}</span>`).join("")}</div>
+      </div>
+    </div>`).join("") : `<div class="empty" style="padding:12px 14px">No bills match this filter.</div>`;
+
+  // Top 3 per section: highest importance, newest first on ties, within the current filter
+  const top3 = arr => [...arr].filter(x => x.importance > 0)
+    .sort((a, b) => b.importance - a.importance || (b.date || b.latest_event_date || "").localeCompare(a.date || a.latest_event_date || "")).slice(0, 3);
+  const bullet = (label, url, text) => `<li><a href="${esc(url)}" target="_blank" rel="noopener">${esc(label)}</a> ${esc(text)}</li>`;
+  document.getElementById("bills-top").innerHTML = top3(bills)
+    .map(b => bullet(b.bill + ":", b.url, b.short || b.note)).join("");
+
+  const regs = DATA.items.filter(i => i.reg && i.material && topicOk(i.topics) && qOk(i.title, i.summary, i.stage));
+  document.getElementById("regs-top").innerHTML = top3(regs)
+    .map(r => bullet(r.title.split(" — ")[0] + ":", r.url, r.short || r.summary)).join("");
+  document.getElementById("regs").innerHTML = regs.length ? regs.map(r => `
+    <div class="bill">
+      <div class="num mono" style="color:var(--gazette);font-size:0.85rem">${fmt(r.date)}</div>
+      <div class="body">
+        <a class="t" href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.title)}</a>
+        ${r.stage ? `<div class="reg-stage">${esc(r.stage)}</div>` : ""}
+        ${r.summary ? `<div class="note">${esc(r.summary)}</div>` : ""}
+        <div class="tags">${r.topics.map(t => `<span class="tag ${t}">${TOPIC[t]}</span>`).join("")}</div>
+      </div>
+    </div>`).join("") : `<div class="empty" style="padding:12px 14px">No regulations on watch for this filter yet. Proposed regulations (Gazette Part I) and new regulations (Part II) that touch AI or the trades will appear here.</div>`;
+
+  const items = DATA.items.filter(i => !i.reg && (i.material || (state.minor && i.material !== true)) && topicOk(i.topics)
+    && qOk(i.title, i.summary, i.source, i.kind, i.excerpt));
+  document.getElementById("feed-top").innerHTML = top3(items.filter(i => i.material))
+    .map(i => bullet(i.title + ":", i.url, i.short || i.summary)).join("");
+  const weeks = {};
+  items.forEach(i => (weeks[weekOf(i.date)] ||= []).push(i));
+  const feed = document.getElementById("feed");
+  feed.innerHTML = Object.keys(weeks).sort().reverse().map(w => `
+    <div class="week"><h3>Week of ${new Date(w + "T12:00:00").toLocaleDateString("en-CA", {month: "long", day: "numeric", year: "numeric"})}</h3>
+    ${weeks[w].map(i => { const [cls, label] = SRC(i.source); return `
+      <div class="item s-${cls}${i.material ? "" : " minor"}">
+        <div class="d">${fmt(i.date)}</div>
+        <div class="body">
+          <div class="tags"><span class="tag src">${esc(label)}</span>${i.kind ? `<span class="tag">${esc(i.kind)}</span>` : ""}${i.topics.map(t => `<span class="tag ${t}">${TOPIC[t]}</span>`).join("")}${i.material === null ? `<span class="tag">Not yet reviewed</span>` : ""}${i.new ? `<span class="tag new">New</span>` : ""}</div>
+          <a class="t" href="${esc(i.url)}" target="_blank" rel="noopener">${esc(i.title)}</a>
+          ${i.summary ? `<p class="sum">${esc(i.summary)}</p>` : i.excerpt ? `<p class="ex">${esc(i.excerpt)}</p>` : ""}
+        </div>
+      </div>`; }).join("")}
+    </div>`).join("") || `<div class="empty">Nothing matches this filter.</div>`;
+
+  const minorCount = DATA.items.filter(i => !i.material).length;
+  document.getElementById("foot").innerHTML =
+    `Covers House debates and committees (OpenParliament), Senate debates and committees, bills (LEGISinfo, full first-reading text) and Canada Gazette Parts I and II, from ${esc(DATA.items.map(i => i.date).sort()[0] || "")}. ` +
+    `${minorCount} passing mentions are hidden unless you turn them on. Not covered yet: ministerial news releases. Committee transcripts appear a few days after each meeting.`;
+}
+document.querySelectorAll(".seg button").forEach(b => b.addEventListener("click", () => { state.topic = b.dataset.topic; save(); render(); }));
+document.getElementById("q").addEventListener("input", e => { state.q = e.target.value; render(); });
+document.getElementById("minor").addEventListener("change", e => { state.minor = e.target.checked; save(); render(); });
+render();
+</script>

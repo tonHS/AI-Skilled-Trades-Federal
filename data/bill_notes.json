@@ -1,0 +1,47 @@
+{
+ "C-266": {
+  "watch": true,
+  "importance": 5,
+  "topics": [
+   "trades"
+  ],
+  "note": "Private member's bill for a national framework on skilled trades and labour mobility. Passed 2nd reading 295–21; HUMA did clause-by-clause on Nov 17.",
+  "short": "Skilled trades and labour mobility framework; clause-by-clause done at HUMA, report to the House next."
+ },
+ "C-34": {
+  "watch": true,
+  "importance": 5,
+  "topics": [
+   "ai"
+  ],
+  "note": "Government's Safe Social Media Act. Would bring designated AI chatbot services under a duty-of-care regime. Passed 2nd reading Oct 29; now in committee.",
+  "short": "Safe Social Media Act covers AI chatbots; in committee after 2nd reading Oct 29."
+ },
+ "C-36": {
+  "watch": true,
+  "importance": 4,
+  "topics": [
+   "ai"
+  ],
+  "note": "Government bill enacting the Protecting Privacy and Consumer Data Act; its text includes provisions on automated decision systems. At 2nd reading in the House.",
+  "short": "Privacy reform with automated decision-making rules; still at 2nd reading."
+ },
+ "C-297": {
+  "watch": true,
+  "importance": 4,
+  "topics": [
+   "ai"
+  ],
+  "note": "Private member's bill: automated personalized pricing would become reviewable conduct under the Competition Act. Introduced Nov 23.",
+  "short": "New bill targets algorithmic personalized pricing under the Competition Act."
+ },
+ "C-277": {
+  "watch": true,
+  "importance": 2,
+  "topics": [
+   "ai"
+  ],
+  "note": "Private member's bill to regulate online use of deepfakes. Outside the order of precedence, so unlikely to be debated soon.",
+  "short": ""
+ }
+}

@@ -1,0 +1,186 @@
+[
+ {
+  "bill": "S-251",
+  "title": "Bill S-251: An Act to establish a national strategy to end energy poverty",
+  "url": "https://www.parl.ca/legisinfo/en/bill/45-1/s-251",
+  "status": "At second reading in the Senate",
+  "latest_event": null,
+  "latest_event_date": "0001-01-01",
+  "terms": {
+   "trades": {
+    "skilled trades": 1
+   }
+  },
+  "in_title": false,
+  "government_bill": false,
+  "sponsor": ""
+ },
+ {
+  "bill": "S-252",
+  "title": "Bill S-252: Stopping Internet Sexual Exploitation Act (the Protect Act)",
+  "url": "https://www.parl.ca/legisinfo/en/bill/45-1/s-252",
+  "status": "At second reading in the Senate",
+  "latest_event": null,
+  "latest_event_date": "0001-01-01",
+  "terms": {
+   "ai": {
+    "deepfakes": 1
+   }
+  },
+  "in_title": false,
+  "government_bill": false,
+  "sponsor": ""
+ },
+ {
+  "bill": "C-15",
+  "title": "Bill C-15: Budget 2025 Implementation Act, No. 1",
+  "url": "https://www.parl.ca/legisinfo/en/bill/45-1/c-15",
+  "status": "Royal assent received",
+  "latest_event": null,
+  "latest_event_date": "0001-01-01",
+  "terms": {
+   "trades": {
+    "apprenticeship": 1
+   }
+  },
+  "in_title": false,
+  "government_bill": false,
+  "sponsor": ""
+ },
+ {
+  "bill": "C-30",
+  "title": "Bill C-30: Spring Economic Update 2026 Implementation Act",
+  "url": "https://www.parl.ca/legisinfo/en/bill/45-1/c-30",
+  "status": "Royal assent received",
+  "latest_event": null,
+  "latest_event_date": "0001-01-01",
+  "terms": {
+   "trades": {
+    "tradespeople": 1,
+    "Labour Mobility Deduction": 1
+   }
+  },
+  "in_title": false,
+  "government_bill": false,
+  "sponsor": ""
+ },
+ {
+  "bill": "C-34",
+  "title": "Bill C-34: Safe Social Media Act",
+  "url": "https://www.parl.ca/legisinfo/en/bill/45-1/c-34",
+  "status": "At consideration in committee in the House of Commons",
+  "latest_event": null,
+  "latest_event_date": "0001-01-01",
+  "terms": {
+   "ai": {
+    "artificial intelligence": 6,
+    "automated decision making": 2,
+    "chatbot": 48
+   }
+  },
+  "in_title": false,
+  "government_bill": false,
+  "sponsor": ""
+ },
+ {
+  "bill": "C-36",
+  "title": "Bill C-36: An Act to enact the Protecting Privacy and Consumer Data Act, to amend the Personal Information Protection and Electronic Documents Act and to make amendments to other Acts",
+  "url": "https://www.parl.ca/legisinfo/en/bill/45-1/c-36",
+  "status": "At second reading in the House of Commons",
+  "latest_event": null,
+  "latest_event_date": "0001-01-01",
+  "terms": {
+   "ai": {
+    "ARTIFICIAL INTELLIGENCE": 1,
+    "machine learning": 1
+   }
+  },
+  "in_title": false,
+  "government_bill": false,
+  "sponsor": ""
+ },
+ {
+  "bill": "C-216",
+  "title": "Bill C-216: Promotion of Safety in the Digital Age Act",
+  "url": "https://www.parl.ca/legisinfo/en/bill/45-1/c-216",
+  "status": "Outside the Order of Precedence",
+  "latest_event": null,
+  "latest_event_date": "0001-01-01",
+  "terms": {
+   "ai": {
+    "artificial intelligence": 1
+   }
+  },
+  "in_title": false,
+  "government_bill": false,
+  "sponsor": ""
+ },
+ {
+  "bill": "C-240",
+  "title": "Bill C-240: Offender Rehabilitation Act",
+  "url": "https://www.parl.ca/legisinfo/en/bill/45-1/c-240",
+  "status": "At consideration in committee in the House of Commons",
+  "latest_event": null,
+  "latest_event_date": "0001-01-01",
+  "terms": {
+   "trades": {
+    "apprenticeship": 1
+   }
+  },
+  "in_title": false,
+  "government_bill": false,
+  "sponsor": ""
+ },
+ {
+  "bill": "C-266",
+  "title": "Bill C-266: National Framework on Skilled Trades and Labour Mobility Act",
+  "url": "https://www.parl.ca/legisinfo/en/bill/45-1/c-266",
+  "status": "At consideration in committee in the House of Commons",
+  "latest_event": null,
+  "latest_event_date": "0001-01-01",
+  "terms": {
+   "trades": {
+    "skilled trades": 25,
+    "apprenticeship": 1,
+    "Red Seal": 1
+   }
+  },
+  "in_title": true,
+  "government_bill": false,
+  "sponsor": ""
+ },
+ {
+  "bill": "C-277",
+  "title": "Bill C-277: Regulating the Online Use of Deepfakes Act",
+  "url": "https://www.parl.ca/legisinfo/en/bill/45-1/c-277",
+  "status": "Outside the Order of Precedence",
+  "latest_event": null,
+  "latest_event_date": "0001-01-01",
+  "terms": {
+   "ai": {
+    "artificial intelligence": 3,
+    "deepfakes": 17
+   }
+  },
+  "in_title": true,
+  "government_bill": false,
+  "sponsor": ""
+ },
+ {
+  "bill": "C-297",
+  "title": "Bill C-297: An Act to amend the Competition Act (automated personalized pricing)",
+  "url": "https://www.parl.ca/legisinfo/en/bill/45-1/c-297",
+  "status": "Outside the Order of Precedence",
+  "latest_event": null,
+  "latest_event_date": "0001-01-01",
+  "terms": {
+   "ai": {
+    "artificial intelligence": 1,
+    "automated decision-making": 1
+   }
+  },
+  "in_title": false,
+  "government_bill": false,
+  "sponsor": ""
+ }
+]

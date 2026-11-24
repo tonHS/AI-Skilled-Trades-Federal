@@ -1,1 +1,12 @@
-Tracker with updates on federal developments in AI and skilled trades. Includes House, Senate and Canadian Gazette developments (the Gazette is where federal regulations are published, https://gazette.gc.ca/accueil-home-eng.html) 
+Tracker with updates on federal developments in AI and skilled trades. Includes House, Senate and Canadian Gazette developments (the Gazette is where federal regulations are published, https://gazette.gc.ca/accueil-home-eng.html)
+
+Live site: https://tonhs.github.io/AI-Skilled-Trades-Federal/
+
+- index.html      the page (built by build.py; do not edit by hand)
+- template.html   page design and rendering
+- collect.py      gathers items from Parliament, the Senate and the Gazette
+- build.py        builds index.html from the data
+- data/           everything found, plus the summaries and ratings
+- CLAUDE.md       the update routine Claude follows when refreshing the tracker
+
+AI-generated and mostly correct with occasional mistakes. Links are included for easy verification.
